@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Modern Documents Dashboard</title>
+
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html,body{font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+      /* small card hover */
+      .card-hover:hover{transform: translateY(-6px); box-shadow: 0 10px 25px rgba(16,24,40,0.06);} 
+      .truncate-2 {display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden}
+    </style>
+  </head>
+  <body class="bg-slate-50 min-h-screen text-slate-800">
+
+    <!-- Topbar -->
+    <header class="bg-white border-b sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+
+          <div class="flex items-center gap-4">
+            <div class="p-2 rounded-lg bg-indigo-600 text-white shadow-sm">
+              <!-- logo -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3-1.343 3-3S13.657 2 12 2 9 3.343 9 5s1.343 3 3 3zM19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-lg font-semibold">MyDocs — Personal Dashboard</h1>
+              <p class="text-xs text-slate-500">Secure, quick access to your important files</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="hidden sm:flex items-center bg-slate-100 rounded-full p-2 pl-3 pr-3 gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1111.293 3.293l3.207 3.207a1 1 0 01-1.414 1.414l-3.207-3.207A6 6 0 012 8z" clip-rule="evenodd" /></svg>
+              <input id="top-search" type="search" placeholder="Search documents..." class="bg-transparent outline-none text-sm" />
+            </div>
+
+            <button id="add-btn" class="bg-indigo-600 text-white px-3 py-2 rounded-lg shadow hover:bg-indigo-700 transition">+ Add Document</button>
+
+            <div class="hidden sm:block">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=60" alt="you" class="h-9 w-9 rounded-full border"/>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        <!-- Sidebar -->
+        <aside class="col-span-1 bg-white rounded-2xl p-5 shadow-sm">
+          <h3 class="text-sm font-semibold text-slate-600 mb-3">Categories</h3>
+          <nav class="space-y-2">
+            <button class="category-btn flex items-center justify-between w-full text-sm p-3 rounded-lg hover:bg-slate-50" data-cat="all">
+              <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor"><path d="M3 7a4 4 0 014-4h6a4 4 0 110 8H7a4 4 0 01-4-4z"/></svg> All Documents</span>
+              <span id="count-all" class="text-slate-400 text-xs">0</span>
+            </button>
+
+            <div class="mt-2 border-t pt-3">
+              <p class="text-xs text-slate-500 font-medium mb-2">School</p>
+              <button class="category-btn flex items-center justify-between w-full text-sm p-3 rounded-lg hover:bg-slate-50" data-cat="school">
+                <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 6l8 4 8-4-8-4z"/><path d="M2 12l8 4 8-4"/></svg> School Docs</span>
+                <span id="count-school" class="text-slate-400 text-xs">0</span>
+              </button>
+
+              <div class="ml-3 mt-2 space-y-1">
+                <button class="subcat-btn text-xs text-slate-500 hover:text-slate-700" data-subcat="10th">10th</button>
+                <button class="subcat-btn text-xs text-slate-500 hover:text-slate-700" data-subcat="12th">12th</button>
+              </div>
+            </div>
+
+            <div class="mt-3 border-t pt-3">
+              <p class="text-xs text-slate-500 font-medium mb-2">Government IDs</p>
+              <button class="category-btn flex items-center justify-between w-full text-sm p-3 rounded-lg hover:bg-slate-50" data-cat="govt">
+                <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-500" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v9.5A1.5 1.5 0 004.5 16H6v1a1 1 0 001 1h6a1 1 0 001-1v-1h1.5A1.5 1.5 0 0019 14.5V5a2 2 0 00-2-2H5z"/></svg> Govt IDs</span>
+                <span id="count-govt" class="text-slate-400 text-xs">0</span>
+              </button>
+
+              <div class="ml-3 mt-2 space-y-1">
+                <button class="subcat-btn text-xs text-slate-500 hover:text-slate-700" data-subcat="aadhaar">Aadhaar</button>
+                <button class="subcat-btn text-xs text-slate-500 hover:text-slate-700" data-subcat="pan">PAN</button>
+              </div>
+            </div>
+
+            <div class="mt-3 border-t pt-3">
+              <p class="text-xs text-slate-500 font-medium mb-2">Other</p>
+              <button class="category-btn flex items-center justify-between w-full text-sm p-3 rounded-lg hover:bg-slate-50" data-cat="other">
+                <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-violet-500" viewBox="0 0 20 20" fill="currentColor"><path d="M3 7a1 1 0 011-1h12a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V7z"/></svg> Other Docs</span>
+                <span id="count-other" class="text-slate-400 text-xs">0</span>
+              </button>
+            </div>
+
+          </nav>
+
+          <div class="mt-6 border-t pt-4">
+            <p class="text-xs text-slate-500">Tip</p>
+            <p class="text-sm text-slate-600 mt-2">Add your Google Drive or OneDrive links and mark docs private in your cloud provider. This dashboard just saves links locally in the browser for quick access.</p>
+          </div>
+        </aside>
+
+        <!-- Main content -->
+        <section class="col-span-1 lg:col-span-3">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-2xl font-semibold">Documents</h2>
+              <p class="text-sm text-slate-500">Organize school, government and other documents in one place.</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <select id="sort-select" class="text-sm rounded-lg p-2 bg-white border">
+                <option value="recent">Sort: Recent</option>
+                <option value="name">Sort: Name</option>
+                <option value="category">Sort: Category</option>
+              </select>
+
+              <button id="bulk-download" class="hidden bg-indigo-100 text-indigo-700 px-3 py-2 rounded-lg text-sm">Download Selected</button>
+            </div>
+          </div>
+
+          <!-- Grid -->
+          <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+          <!-- empty state -->
+          <div id="empty" class="hidden text-center mt-8">
+            <p class="text-slate-500">No documents found. Click <span class="font-medium">Add Document</span> to get started.</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Add / Edit Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50" aria-hidden="true" role="dialog">
+      <div class="bg-white rounded-2xl w-full max-w-xl p-6 shadow-lg" role="document">
+        <div class="flex items-start justify-between">
+          <div>
+            <h3 class="text-lg font-semibold">Add a new document</h3>
+            <p class="text-sm text-slate-500">Give it a name and paste the shareable link (Google Drive, OneDrive, etc.).</p>
+          </div>
+          <button id="modal-close" class="text-slate-400 hover:text-slate-600">✕</button>
+        </div>
+
+        <form id="doc-form" class="mt-4 space-y-3">
+          <div>
+            <label class="text-sm text-slate-600">Document title</label>
+            <input id="doc-title" required class="w-full mt-1 p-2 border rounded-md" placeholder="e.g. 10th Marksheet" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-sm text-slate-600">Category</label>
+              <select id="doc-category" class="w-full mt-1 p-2 border rounded-md">
+                <option value="school">School</option>
+                <option value="govt">Government ID</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-sm text-slate-600">Subcategory / Type</label>
+              <select id="doc-subcat" class="w-full mt-1 p-2 border rounded-md"></select>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-sm text-slate-600">Shareable link</label>
+            <input id="doc-link" required class="w-full mt-1 p-2 border rounded-md" placeholder="https://drive.google.com/.." />
+          </div>
+
+          <div class="flex items-center justify-end gap-2">
+            <button type="button" id="modal-cancel" class="px-3 py-2 rounded-md text-sm">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md">Save Document</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // --- Initial sample data (will be overwritten by localStorage if present) ---
+      const initialDocuments = [
+        {id: 1, title: '10th Marksheet', category: 'school', subcat: '10th', link: '#', created: '2024-11-01'},
+        {id: 2, title: '12th Marksheet', category: 'school', subcat: '12th', link: '#', created: '2024-12-02'},
+        {id: 3, title: 'Aadhaar Card', category: 'govt', subcat: 'aadhaar', link: '#', created: '2023-02-14'},
+        {id: 4, title: 'PAN Card', category: 'govt', subcat: 'pan', link: '#', created: '2022-09-05'},
+        {id: 5, title: 'Resume - Vikas Sharma', category: 'other', subcat: 'resume', link: '#', created: '2025-06-22'},
+      ];
+
+      // --- state ---
+      let state = {
+        docs: [],
+        filter: {cat: 'all', subcat: null},
+        query: '',
+        sort: 'recent'
+      };
+      let editId = null; // null => create mode, otherwise editing doc id
+
+      // --- DOM helpers ---
+      const el = id => document.getElementById(id);
+      const grid = el('grid');
+      const empty = el('empty');
+      const modal = el('modal');
+      const storageKey = 'mydocs_v1';
+
+      const subcatOptions = {
+        school: ['10th','12th','other'],
+        govt: ['aadhaar','pan','other'],
+        other: ['resume','certificate','other']
+      };
+
+      // --- persistence ---
+      function load() {
+        try {
+          const raw = localStorage.getItem(storageKey);
+          if(raw) state.docs = JSON.parse(raw);
+          else state.docs = initialDocuments.slice();
+        } catch (e) { state.docs = initialDocuments.slice(); }
+      }
+      function save() { localStorage.setItem(storageKey, JSON.stringify(state.docs)); }
+
+      // --- rendering ---
+      function renderCounts(){
+        el('count-all').innerText = state.docs.length;
+        el('count-school').innerText = state.docs.filter(d=>d.category==='school').length;
+        el('count-govt').innerText = state.docs.filter(d=>d.category==='govt').length;
+        el('count-other').innerText = state.docs.filter(d=>d.category==='other').length;
+      }
+
+      function getIcon(subcat){
+        const map = {'10th':'🎓','12th':'🎓','aadhaar':'🆔','pan':'💳','resume':'📄','other':'📁','certificate':'📜'};
+        return map[subcat] || '📄';
+      }
+
+      function filteredDocs(){
+        let list = state.docs.slice();
+        if(state.filter.cat !== 'all') list = list.filter(d=>d.category === state.filter.cat);
+        if(state.filter.subcat) list = list.filter(d=>d.subcat === state.filter.subcat);
+        if(state.query) list = list.filter(d=> d.title.toLowerCase().includes(state.query.toLowerCase()));
+
+        if(state.sort === 'name') list.sort((a,b)=> a.title.localeCompare(b.title));
+        else if(state.sort === 'category') list.sort((a,b)=> a.category.localeCompare(b.category));
+        else list.sort((a,b)=> new Date(b.created) - new Date(a.created));
+
+        return list;
+      }
+
+      function renderGrid(){
+        const list = filteredDocs();
+        grid.innerHTML = '';
+        if(list.length === 0){ empty.classList.remove('hidden'); } else { empty.classList.add('hidden'); }
+
+        list.forEach(doc=>{
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-2xl p-5 shadow-sm card-hover transition transform';
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <div class="h-12 w-12 rounded-lg bg-slate-50 flex items-center justify-center text-2xl">${getIcon(doc.subcat)}</div>
+                <div>
+                  <h3 class="font-semibold">${escapeHtml(doc.title)}</h3>
+                  <p class="text-xs text-slate-500 truncate-2">${doc.subcat} • ${doc.category}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button class="copy-btn text-slate-500 text-sm px-3 py-1 rounded-md" data-link="${escapeHtml(doc.link)}">Copy</button>
+                <a href="${escapeHtml(doc.link)}" target="_blank" rel="noopener" class="text-indigo-600 font-medium text-sm px-3 py-1 rounded-md">View</a>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-slate-400">Added: ${doc.created}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <a href="${escapeHtml(doc.link)}" target="_blank" rel="noopener" class="text-sm bg-indigo-600 text-white px-3 py-1 rounded-md download-btn" data-link="${escapeHtml(doc.link)}">Download</a>
+                <button class="text-sm text-slate-500 edit-btn px-2 py-1 rounded-md" data-id="${doc.id}">Edit</button>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        // attach copy/click handlers
+        document.querySelectorAll('.copy-btn').forEach(btn=> btn.addEventListener('click', (e)=>{
+          const link = e.currentTarget.dataset.link;
+          navigator.clipboard.writeText(link).then(()=>{
+            const prev = e.currentTarget.innerText;
+            e.currentTarget.innerText = 'Copied';
+            setTimeout(()=> e.currentTarget.innerText = prev, 1200);
+          }).catch(()=> alert('Copy failed — please copy manually.'));
+        }));
+
+        document.querySelectorAll('.edit-btn').forEach(btn=> btn.addEventListener('click', (e)=>{
+          const id = Number(e.currentTarget.dataset.id);
+          openModalForEdit(id);
+        }));
+
+        // download notice: cross-origin downloads may not work; this opens the link in a new tab
+        document.querySelectorAll('.download-btn').forEach(a=> a.addEventListener('click', (e)=>{
+          // if you control the target file and want direct download, host it on same origin or set proper headers.
+          // allow default behaviour (open in new tab). No extra handling here.
+        }));
+
+        save();
+        renderCounts();
+      }
+
+      // simple HTML escape for injected values
+      function escapeHtml(str){
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // --- modal logic ---
+      function openModal(){
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden','false');
+      }
+      function closeModal(){
+        modal.classList.add('hidden');
+        modal.setAttribute('aria-hidden','true');
+        el('doc-form').reset();
+        editId = null;
+      }
+
+      function openModalForEdit(id){
+        const doc = state.docs.find(d=>d.id===id);
+        if(!doc) return;
+        editId = id;
+        el('doc-title').value = doc.title;
+        el('doc-link').value = doc.link;
+        el('doc-category').value = doc.category;
+        populateSubcatOptions(doc.category);
+        el('doc-subcat').value = doc.subcat;
+        openModal();
+      }
+
+      function populateSubcatOptions(cat){
+        const sub = el('doc-subcat');
+        sub.innerHTML = subcatOptions[cat].map(o=>`<option value="${o}">${o}</option>`).join('');
+      }
+
+      // form handler for adding/updating doc
+      function handleForm(e){
+        e.preventDefault();
+        const title = el('doc-title').value.trim();
+        const category = el('doc-category').value;
+        const subcat = el('doc-subcat').value;
+        const link = el('doc-link').value.trim();
+        if(!title || !link) return;
+
+        if(editId){
+          // update existing
+          const doc = state.docs.find(d=>d.id===editId);
+          if(!doc) return;
+          doc.title = title;
+          doc.category = category;
+          doc.subcat = subcat;
+          doc.link = link;
+        } else {
+          const newDoc = {id: Date.now(), title, category, subcat, link, created: new Date().toISOString().slice(0,10)};
+          state.docs.unshift(newDoc);
+        }
+
+        save();
+        renderGrid();
+        closeModal();
+      }
+
+      // --- init ---
+      document.addEventListener('DOMContentLoaded', ()=>{
+        // load
+        load();
+
+        // initial render
+        renderGrid();
+
+        // modal controls
+        el('add-btn').addEventListener('click', ()=>{
+          editId = null;
+          el('doc-category').value = 'school';
+          populateSubcatOptions('school');
+          openModal();
+        });
+        el('modal-close').addEventListener('click', closeModal);
+        el('modal-cancel').addEventListener('click', closeModal);
+
+        // close modal on overlay click
+        modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+
+        el('doc-form').addEventListener('submit', handleForm);
+
+        // category buttons
+        document.querySelectorAll('.category-btn').forEach(btn=> btn.addEventListener('click', (e)=>{
+          const cat = e.currentTarget.dataset.cat;
+          state.filter.cat = cat;
+          state.filter.subcat = null;
+          renderGrid();
+        }));
+
+        document.querySelectorAll('.subcat-btn').forEach(btn=> btn.addEventListener('click', (e)=>{
+          const sub = e.currentTarget.dataset.subcat;
+          state.filter.cat = 'all';
+          state.filter.subcat = sub;
+          renderGrid();
+        }));
+
+        el('top-search').addEventListener('input', (e)=>{ state.query = e.target.value; renderGrid(); });
+
+        el('sort-select').addEventListener('change', (e)=>{ state.sort = e.target.value; renderGrid(); });
+
+        // update subcategory options when category changes in the modal
+        el('doc-category').addEventListener('change', (e)=> populateSubcatOptions(e.target.value));
+
+      });
+
+    </script>
+  </body>
+</html>
